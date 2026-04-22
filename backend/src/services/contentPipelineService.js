@@ -62,6 +62,12 @@ function selectTopContent(posts, limit = 5) {
   return [...posts].sort((a, b) => b.score - a.score).slice(0, limit);
 }
 
+function isMockLikeContent(item) {
+  if (!item) return false;
+  const text = JSON.stringify(item).toLowerCase();
+  return text.includes("mock");
+}
+
 async function runPipeline({ user }) {
   const userId = user.id || user._id;
   const posts = await fetchPosts(user.niche);
@@ -78,6 +84,7 @@ async function runPipeline({ user }) {
 
   const bestPerforming = (contentRows || [])
     .map(mapContentRow)
+    .filter((item) => !isMockLikeContent(item))
     .sort((a, b) => (b.performance?.views || 0) - (a.performance?.views || 0))
     .slice(0, 3);
 

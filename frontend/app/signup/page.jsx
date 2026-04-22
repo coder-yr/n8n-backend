@@ -3,11 +3,16 @@ import Link from "next/link";
 
 export default function SignupPage() {
   return (
-    <main className="mx-auto mt-20 max-w-md p-4">
-      <AuthForm mode="signup" />
-      <p className="mt-4 text-center text-slate-400">
-        Already have an account? <Link href="/login" className="text-indigo-400">Login</Link>
-      </p>
+    <main className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <AuthForm mode="signup" />
+        <p className="mt-8 text-center text-sm text-slate-500 font-medium">
+          Already a member?{" "}
+          <Link href="/login" className="text-indigo-400 hover:text-indigo-300 transition-colors font-bold">
+            Sign in to your account
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }

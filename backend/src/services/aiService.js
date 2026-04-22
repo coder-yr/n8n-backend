@@ -96,6 +96,12 @@ Tone: ${userTone}
 Niche: ${niche}
 Top performing examples: ${JSON.stringify(feedbackExamples)}
 Insights: ${JSON.stringify(insights)}
+
+IMPORTANT INSTRUCTIONS:
+1. DO NOT USE placeholder text like "mock hook", "mock caption", or "#mock".
+2. Generate actual, ready-to-use hooks and captions tailored to the niche. 
+3. Do NOT copy the literal text from the feedback examples. Use them only for inspiration.
+
 Return strict JSON:
 {
   "hooks": ["..."],
