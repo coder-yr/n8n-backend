@@ -9,6 +9,10 @@ export function getUser() {
   return raw ? JSON.parse(raw) : null;
 }
 
+export function updateUser(user) {
+  localStorage.setItem("user", JSON.stringify(user));
+}
+
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");

@@ -6,6 +6,7 @@ const contentRoutes = require("./routes/contentRoutes");
 const scheduleRoutes = require("./routes/scheduleRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const systemRoutes = require("./routes/systemRoutes");
+const userRoutes = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/content", contentRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api", systemRoutes);
 
 app.use(errorMiddleware);

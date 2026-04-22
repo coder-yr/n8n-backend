@@ -61,4 +61,27 @@ async function login(req, res, next) {
   }
 }
 
-module.exports = { signup, login };
+async function updateSettings(req, res, next) {
+  try {
+    const { niche, tone } = req.body;
+    const userId = req.user.id;
+
+    const { data: updated, error } = await supabase
+      .from("users")
+      .update({ niche, tone })
+      .eq("id", userId)
+      .select("*")
+      .single();
+    if (error) throw error;
+
+    const user = mapUserRow(updated);
+    res.json({
+      message: "Settings updated",
+      user: { id: user.id, email: user.email, plan: user.plan, niche: user.niche, tone: user.tone }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { signup, login, updateSettings };

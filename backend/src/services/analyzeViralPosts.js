@@ -23,15 +23,35 @@ function getFallbackInsights(posts = []) {
 }
 
 async function analyzeViralPosts(posts, niche) {
+  let nicheContext = `Focus on the "${niche}" audience.`;
+  if (niche.toLowerCase() === "developer") {
+    nicheContext = `Audience: Developers & engineers.
+Extract patterns around: coding mistakes, career growth, AI tools, debugging struggles, tech stack choices, imposter syndrome.
+IGNORE patterns around generic life topics.`;
+  } else if (niche.toLowerCase() === "startup") {
+    nicheContext = `Audience: Startup founders & entrepreneurs.
+Extract patterns around: failed launches, product-market fit, fundraising, building in public, user growth.
+IGNORE patterns around generic motivation or lifestyle.`;
+  } else if (niche.toLowerCase() === "marketing") {
+    nicheContext = `Audience: Growth marketers & content creators.
+Extract patterns around: algorithm changes, viral copywriting, ad performance, growth hacks, content strategy.
+IGNORE patterns around generic inspiration or unrelated topics.`;
+  }
+
   const prompt = `
-Analyze these top performing viral posts in the "${niche}" niche. 
-Identify the core content patterns, underlying emotional triggers, and specific hook styles that made them successful.
+You are a viral content strategist analyzing top-performing posts for a TECH audience.
+${nicheContext}
+
+Analyze these posts and identify:
+1. Core content patterns that made them perform well in this niche.
+2. Emotional triggers used (e.g., fear of falling behind, career urgency, FOMO).
+3. Hook STYLES (not literal text), e.g., "negative hook", "curiosity gap", "contrarian take", "personal failure story".
 
 Return strict JSON:
 {
   "patterns": ["..."],
   "emotionalTriggers": ["..."],
-  "hooks": ["..."] // List the hook STYLES (e.g. "curiosity gap", "negative hook"), not the literal text
+  "hooks": ["..."]
 }
 Posts: ${JSON.stringify(posts)}
 `;

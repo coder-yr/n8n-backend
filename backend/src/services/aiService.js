@@ -75,27 +75,50 @@ async function callGroq(prompt) {
 async function generateContent(insights, userTone, niche, feedbackExamples = []) {
   let nicheFocus = `Focus on ${niche}.`;
   if (niche.toLowerCase() === "developer") {
-    nicheFocus = "Focus heavily on coding problems, software engineering struggles, and tech humor.";
+    nicheFocus = `
+Target Audience: Developers, engineers, and coders.
+Pain Points to cover: bugs, burnout, career growth, learning the wrong stack, imposter syndrome, interview prep, open source.
+Topics: coding problems, software architecture, AI tools for developers, GitHub, side projects, tech interviews.
+AVOID: generic life advice, gossip, waiting, unrelated lifestyle topics.`;
   } else if (niche.toLowerCase() === "startup") {
-    nicheFocus = "Focus heavily on startup struggles, founder mental health, raising capital, and scaling challenges.";
+    nicheFocus = `
+Target Audience: Startup founders and early-stage entrepreneurs.
+Pain Points to cover: no-code vs code debate, finding co-founders, raising a seed round, user acquisition, burnout, pivoting, failed launches.
+Topics: startup struggles, product-market fit, fundraising, building in public, distribution over product.
+AVOID: generic motivation, life quotes, unrelated lifestyle topics.`;
   } else if (niche.toLowerCase() === "marketing") {
-    nicheFocus = "Focus heavily on marketing growth hacks, SEO tricks, copywriting tips, and algorithm updates.";
+    nicheFocus = `
+Target Audience: Growth marketers, content creators, and digital marketers.
+Pain Points to cover: algorithm changes, low reach, ad spend, content burnout, failing campaigns.
+Topics: marketing growth hacks, SEO tricks, viral copywriting formulas, Instagram/TikTok algorithm, A/B testing.
+AVOID: generic inspiration, gossip, unrelated lifestyle topics.`;
   }
 
   const prompt = `
-Generate short-form content based on insights.
+You are a viral Instagram content creator for a TECH audience.
+Target: developers, startup founders, and marketers.
+
 Tone: ${userTone}
 Niche: ${niche}
 ${nicheFocus}
-Top performing examples: ${JSON.stringify(feedbackExamples)}
-Insights: ${JSON.stringify(insights)}
 
-IMPORTANT INSTRUCTIONS:
-1. DO NOT USE placeholder text like "mock hook", "mock caption", or "#mock".
-2. Generate actual, ready-to-use hooks and captions tailored to the niche. 
-3. Do NOT copy the literal text from the feedback examples. Use them only for inspiration.
+Top performing examples for reference: ${JSON.stringify(feedbackExamples)}
+Viral patterns to model: ${JSON.stringify(insights)}
 
-Return strict JSON:
+RULES FOR HOOKS (strictly enforce all):
+1. MAX 8 WORDS PER HOOK.
+2. Must relate to: coding, startups, AI, dev careers, or marketing growth. NO generic life topics.
+3. Trigger emotion: curiosity, fear of missing out, career urgency.
+4. Sound like a viral reel, NOT a blog post or LinkedIn article.
+5. BAD (NEVER USE): "Did you know...", "A study shows...", "Here are 5 tips...", "Waiting teaches you..."
+6. GOOD (USE AS STYLE GUIDE): "You're learning the wrong tech stack", "This coding mistake kills your career", "Stop building projects like this", "AI replaced this job last week".
+
+CONTENT RULES:
+1. NEVER use placeholder text like "mock hook", "mock caption", or "#mock".
+2. Generate content that is ready-to-post without editing.
+3. Use developer/founder lingo naturally (e.g., "shipped", "MVP", "tech debt", "push to prod").
+
+Return ONLY valid JSON, no extra text:
 {
   "hooks": ["..."],
   "scripts": ["..."],
