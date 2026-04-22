@@ -24,13 +24,7 @@ function toArray(value, fallback) {
   return fallback;
 }
 
-function normalizeInsightsOutput(parsed, fallback = {}) {
-  return {
-    patterns: toArray(parsed?.patterns, fallback.patterns || []),
-    emotionalTriggers: toArray(parsed?.emotionalTriggers, fallback.emotionalTriggers || []),
-    hooks: toArray(parsed?.hooks, fallback.hooks || [])
-  };
-}
+
 
 function normalizeScriptsOutput(parsed, fallback = {}) {
   return {
@@ -76,24 +70,23 @@ async function callGroq(prompt) {
   }
 }
 
-async function generateInsights(posts) {
-  const prompt = `
-Analyze viral post patterns and return strict JSON:
-{
-  "patterns": ["..."],
-  "emotionalTriggers": ["..."],
-  "hooks": ["..."]
-}
-Posts: ${JSON.stringify(posts)}
-`;
-  return { raw: await callGroq(prompt) };
-}
 
-async function generateScripts(insights, userTone, niche, feedbackExamples = []) {
+
+async function generateContent(insights, userTone, niche, feedbackExamples = []) {
+  let nicheFocus = `Focus on ${niche}.`;
+  if (niche.toLowerCase() === "developer") {
+    nicheFocus = "Focus heavily on coding problems, software engineering struggles, and tech humor.";
+  } else if (niche.toLowerCase() === "startup") {
+    nicheFocus = "Focus heavily on startup struggles, founder mental health, raising capital, and scaling challenges.";
+  } else if (niche.toLowerCase() === "marketing") {
+    nicheFocus = "Focus heavily on marketing growth hacks, SEO tricks, copywriting tips, and algorithm updates.";
+  }
+
   const prompt = `
 Generate short-form content based on insights.
 Tone: ${userTone}
 Niche: ${niche}
+${nicheFocus}
 Top performing examples: ${JSON.stringify(feedbackExamples)}
 Insights: ${JSON.stringify(insights)}
 
@@ -122,14 +115,7 @@ function parseStructuredResponse(raw, fallback = {}) {
   }
 }
 
-function getFallbackInsights(posts = []) {
-  const topText = posts?.[0]?.text || "High-performing viral post";
-  return {
-    patterns: [topText],
-    emotionalTriggers: ["curiosity", "urgency"],
-    hooks: ["Stop scrolling if you want faster growth."]
-  };
-}
+
 
 function getFallbackScripts(insights = {}, userTone = "professional", niche = "general") {
   const primaryHook = insights.hooks?.[0] || `Here's a ${userTone} content idea for ${niche}.`;
@@ -142,12 +128,10 @@ function getFallbackScripts(insights = {}, userTone = "professional", niche = "g
 }
 
 module.exports = {
-  generateInsights,
-  generateScripts,
+  callGroq,
+  generateContent,
   extractJsonText,
   parseStructuredResponse,
-  normalizeInsightsOutput,
   normalizeScriptsOutput,
-  getFallbackInsights,
   getFallbackScripts
 };

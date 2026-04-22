@@ -1,14 +1,12 @@
 const { supabase } = require("../config/supabase");
 const { mapContentRow } = require("../utils/dbMappers");
 const {
-  generateInsights,
-  generateScripts,
+  generateContent,
   parseStructuredResponse,
-  normalizeInsightsOutput,
   normalizeScriptsOutput,
-  getFallbackInsights,
   getFallbackScripts
 } = require("./aiService");
+const { analyzeViralPosts } = require("./analyzeViralPosts");
 
 const axios = require("axios");
 
@@ -88,14 +86,9 @@ async function runPipeline({ user }) {
     .sort((a, b) => (b.performance?.views || 0) - (a.performance?.views || 0))
     .slice(0, 3);
 
-  const insightsRaw = await generateInsights(top);
-  const insightsFallback = getFallbackInsights(top);
-  const insights = normalizeInsightsOutput(
-    parseStructuredResponse(insightsRaw.raw, insightsFallback),
-    insightsFallback
-  );
+  const insights = await analyzeViralPosts(top, user.niche);
 
-  const generatedRaw = await generateScripts(insights, user.tone, user.niche, bestPerforming);
+  const generatedRaw = await generateContent(insights, user.tone, user.niche, bestPerforming);
   const generatedFallback = getFallbackScripts(insights, user.tone, user.niche);
   const generated = normalizeScriptsOutput(
     parseStructuredResponse(generatedRaw.raw, generatedFallback),
