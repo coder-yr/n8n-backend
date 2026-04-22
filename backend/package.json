@@ -1,0 +1,28 @@
+{
+  "name": "ai-viral-content-engine-backend",
+  "version": "1.0.0",
+  "description": "Backend API for AI Viral Content Engine",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "worker": "node src/workers/contentWorker.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.104.0",
+    "axios": "^1.8.4",
+    "bcryptjs": "^2.4.3",
+    "bullmq": "^5.12.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
